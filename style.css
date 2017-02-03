@@ -165,13 +165,16 @@ body {
     border: dotted 5px white;
     border-radius: 12px;
 }
+
 .game_modes img{
     margin: 10px;
     box-sizing: border-box;
     width: 70%;
-
-
 }
 .game_modes img:hover {
     border: 5px solid red;
+}
+.reset_db_div {
+    width: 50px;
+    height: 50px;
 }

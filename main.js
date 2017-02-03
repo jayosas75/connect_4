@@ -2,101 +2,36 @@ var connect4 = new game_constructor();
 var connect4Model = new GenericFBModel('spongeBob-connect4-derrick', boardUpdated);
 
 var emptyObject = {
-    column: 'empty',
-    multiplayer: false,
-    player1joined: false,
-    player2joined: false,
-    game_over: true,
-    db_player_turn: -1
+    column: 'empty'
 };
-
-// setTimeout(function() {
-//     connect4Model.saveState(emptyObject);
-//     console.log('db reset')
-// }, 5000);
-
-
-// update_firebase = function(column, multiplayer, player1joined, player2joined, game_over, db_player_turn)
-
-function setupDB() {
-    setTimeout(function() {
-        if (connect4.data_received_from_server.player1joined === true && connect4.data_received_from_server.player2joined === true) {
-            console.log('something is wrong...');
-        }
-        else if (connect4.data_received_from_server.player1joined === false) {
-            connect4.update_firebase('empty', false, true, false, true, -1); //setting firebase back to empty DB, joining as player 1
-            connect4.data_received_from_server = {
-                column: 'empty',
-                multiplayer: false,
-                player1joined: true,
-                player2joined: false,
-                game_over: true,
-                db_player_turn: -1
-            };
-            console.log('game starting, you are player 1');
-            connect4.player_turn = -1;
-            connect4.you_are = 'player 1';
-        }
-        else if (connect4.data_received_from_server.player1joined === true) {
-            connect4.update_firebase('empty', true, true, true, true, -1); //player 1 has already joined, joining as player 2
-            console.log('game starting, you are player 2');
-            connect4.you_are = 'player 2';
-            connect4.player_turn = 1;
-            connect4.data_received_from_server = {
-                column: 'empty',
-                multiplayer: true,
-                player1joined: true,
-                player2joined: true,
-                game_over: true,
-                db_player_turn: -1
-            };
-        }
-        else {
-            console.log("player 1 may not be in multiplayer");
-        }
-    }, 5000)
-}
 
 
 
 function boardUpdated(data){
-
     console.log('data from the server: ', data);
-    connect4.data_received_from_server = data;
-
-    connect4.remote_column_clicked = connect4.data_received_from_server.column + ' 6';
-    var input_into_jquery_selector = 'div>div:contains(' + connect4.remote_column_clicked + ')';
-
-
-    if (connect4.data_received_from_server.db_player_turn === connect4.player_turn) {
-        $(input_into_jquery_selector).click();
-        return;
-    }
 }
 
 $(document).ready(function() {
     select_game_mode();
-    setupDB();
 });
 
 function audio_controls() {
     $('.material-icons').toggleClass('muted');
     $('.music')[0].paused ? $('.music')[0].play() : $('.music')[0].pause();
 }
+
 function game_constructor() {
+    this.refresh_counter = 0;
+    this.auto_click_here = null;
     this.player_turn = null;
-    this.you_are = '';
     this.data_received_from_server = {};
-    // this.multiplayer = false;
-    // this.player2joined = false;
-    this.remote_column_clicked = null;
+    this.moves_so_far = [];
     this.player1 = true; // variable used to detect player turn
     this.player1_score = 0;
     this.player2_score = 0;
     $('.patrick').hide();
     this.diag1_counter = 0, this.diag2_counter = 0, this.horz_counter = 0, this.vert_counter = 0;
     this.direction_tracker = 0;
-
     this.div_array = [
         [,,,,,],
         [,,,,,],
@@ -127,7 +62,10 @@ function select_game_mode() {
     var img_multi = $('<img>', {
         src: 'img/multi.png'
     });
-    game_modes_div.append(img_local, img_multi);
+    var reset_db_div = $('<div>', {
+        class: 'reset_db_div'
+    });
+    game_modes_div.append(img_local, img_multi, reset_db_div);
     $('.slot_container').append(game_modes_div);
 
     setTimeout(function() {
@@ -141,10 +79,14 @@ function select_game_mode() {
             $('.slot_container').empty();
             console.log('multi selected');
             connect4.multiplayer = true;
-            connect4.update_firebase('empty', true, connect4.data_received_from_server.player1joined,  connect4.data_received_from_server.player2joined,  connect4.data_received_from_server.game_over, connect4.data_received_from_server.db_player_turn);
             connect4.waiting_for_player_2();
         });
-    }, 2000);
+
+        $('.game_modes div:nth-child(3)').click(function() {
+            console.log('reset DB selected');
+            connect4Model.saveState(emptyObject);
+        });
+    },1000);
 
 }
 game_constructor.prototype.waiting_for_player_2 = function() {
@@ -186,6 +128,7 @@ game_constructor.prototype.create_divs = function() {
         }
     }
 };
+
 // definition for slot object
 game_constructor.prototype.slot_constructor = function(parent, column, row) {
     this.parent = parent;
@@ -211,25 +154,11 @@ game_constructor.prototype.slot_constructor = function(parent, column, row) {
     }
 };
 
-game_constructor.prototype.update_firebase = function(column, multiplayer, player1joined, player2joined, game_over, db_player_turn) {
-    this.firebase_db = {
-        column: column,
-        multiplayer: multiplayer,
-        player1joined: player1joined,
-        player2joined: player2joined,
-        game_over: game_over,
-        db_player_turn: db_player_turn
-    };
-    //console.log('sending data to server: ', this.firebase_db);
-    connect4Model.saveState(this.firebase_db);
-};
-
 game_constructor.prototype.handle_slot_click = function(clickedSlot) {
     var current_column = this.game_array[clickedSlot.column];
-    this.data_received_from_server.db_player_turn = this.data_received_from_server.db_player_turn * -1;
-    if (connect4.player_turn !== connect4.data_received_from_server.db_player_turn) {
-        this.update_firebase(clickedSlot.column, this.data_received_from_server.multiplayer, this.data_received_from_server.player1joined, this.data_received_from_server.player2joined, this.data_received_from_server.game_over, this.data_received_from_server.db_player_turn);
-    }
+    this.moves_so_far.push(clickedSlot.column);
+    console.log('moves: ', this.moves_so_far);
+
     if (this.player1 === true) {
         $('.top').hover(function(){
             $(this).css({"background-image": "url('img/patrick_ready.png')", "background-repeat": "no-repeat", "background-size": "100%"})
@@ -260,7 +189,21 @@ game_constructor.prototype.handle_slot_click = function(clickedSlot) {
     }
 
     this.search_surrounding_slots(clickedSlot.column, down_to_bottom);
+
 };
+
+game_constructor.prototype.refresh_gameboard = function() {
+
+    $('.slot_container').empty();
+    this.init();
+    for (var i = 0; i < this.moves_so_far.length; i++) {
+        this.auto_click_here = this.moves_so_far[i] + ' 6';
+        var input_into_jquery_selector = 'div>div:contains(' + this.auto_click_here + ')';
+        $(input_into_jquery_selector).click();
+    }
+
+};
+
 game_constructor.prototype.reset_board = function(){
     $('.slot_container').empty();
     this.init();
@@ -276,7 +219,6 @@ game_constructor.prototype.reset_board = function(){
         ['a', 'a', 'a', 'a', 'a', 'a'], // column 5
         ['a', 'a', 'a', 'a', 'a', 'a']  // column 6
     ];
-    this.update_firebase('empty', false, false, false, true, -1);
 };
 
 game_constructor.prototype.hard_reset = function() {
@@ -365,7 +307,6 @@ game_constructor.prototype.who_wins = function(){
             this.player2_score++;
             this.display_stats();
         }
-        this.update_firebase('empty', false, false, false, true, -1);
 };
 
 game_constructor.prototype.increase_counters = function(direction_tracker) {
@@ -402,7 +343,7 @@ game_constructor.prototype.reset_counters = function () {
 
 
 
-
+//
 
 
 
