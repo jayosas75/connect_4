@@ -3,7 +3,6 @@
 <head>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
-    <script src="genericFirebaseBackend.js"></script>
     <script src="main.js"></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
@@ -11,14 +10,20 @@
 </head>
 <body>
 <div class="logo_container">
-    <img class='sound_on' src="img/sound_on.png">
-    <img class='sound_off' src="img/sound_off.png">
+    <div class="toolTip">
+        <img class='sound_on' src="img/sound_on.png">
+        <span class="toolTipText">Music on</span>
+    </div>
+    <div class="toolTip">
+        <img class='sound_off' src="img/sound_off.png">
+        <span class="toolTipText">Music off</span>
+    </div>
     <img class='logo' src="img/logo.png"><br>
     <img class='logo2' src="img/logo2.png"><br>
     <img class='sandp' src="img/sandp.png">
 </div>
 <div class='slot_container'>
-
+    <p class="music_okay">Music Off</p>
 </div>
 
 
@@ -35,10 +40,10 @@
     <img class='patrick' src="img/patrick.png">
     <img class="new_game" src="img/new_game.png">
     <img class='reset_score' src="img/reset_score.png">
-    <audio class="music" autoplay loop>
+    <audio id='music' class="music" loop autoplay>
         <source src="music/theme_song.mp3" >
     </audio>
-    <audio id="drop" preload="auto">
+    <audio id="drop" preload="auto" >
         <source src="music/drop.wav">
     </audio>
     <audio id="spongebob_laugh" preload="auto">
@@ -47,6 +52,7 @@
     <audio id="patrick_laugh" preload="auto">
         <source src="music/patrick.mp3">
     </audio>
+
 
 </div>
 </body>

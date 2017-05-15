@@ -25,9 +25,7 @@ body {
     margin-left: -10%;
 }
 .slot_container {
-    margin: 6% 2% 0 2%;
     float: left;
-    height: 40%;
     width: 40%;
     display: inline-block;
 }
@@ -189,3 +187,22 @@ body {
     width: 18%;
     position: relative;
 }
+
+.toolTip .toolTipText {
+    visibility: hidden;
+    width: 120px;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    margin-left: 14%;
+    z-index: 1;
+    font-weight: 800;
+}
+
+.toolTip:hover .toolTipText {
+    visibility: visible;
+    font-size: 16px;
+}
+
+
