@@ -158,7 +158,7 @@ game_constructor.prototype.handle_slot_click = function(clickedSlot) {
             this.div_array[clickedSlot.column][down_to_bottom].slot_div.toggleClass('krabby_patty_clicked_spongebob');
             $('.slot').hide();
             $('.slot_container').append("<div class='you_won'><img class='patrick_won' src='img/krabbypatty.gif'></div>");
-            setTimeout(this.set_timeout, 3000);
+            setTimeout(this.set_timeout_krabby, 3000);
             this.player1 = true;
             $('.youare_s').show();
             $('.youare_p').hide();
@@ -190,7 +190,7 @@ game_constructor.prototype.handle_slot_click = function(clickedSlot) {
             this.div_array[clickedSlot.column][down_to_bottom].slot_div.toggleClass('krabby_patty_clicked_patrick');
             $('.slot').hide();
             $('.slot_container').append("<div class='you_won'><img class='patrick_won' src='img/krabbypatty.gif'></div>");
-            setTimeout(this.set_timeout, 3000);
+            setTimeout(this.set_timeout_krabby, 3000);
             this.player1 = false;
             $('.youare_s').hide();
             $('.youare_p').show();
@@ -210,7 +210,14 @@ game_constructor.prototype.handle_slot_click = function(clickedSlot) {
 game_constructor.prototype.set_timeout = function(){
     $('.you_won').hide();
     $('.slot').show();
-}
+};
+
+game_constructor.prototype.set_timeout_krabby = function(){
+    $('.you_won').hide();
+    $('.slot').show();
+    window.alert('Krabby Patty Found! Take another turn!')
+};
+
 game_constructor.prototype.reset_board = function(){
     $('.slot_container').empty();
     this.init();
