@@ -6,29 +6,35 @@ body {
     height: 90vh;
     width: 100vw;
 }
+
 .logo_container {
     margin: 2%;
     float: left;
     height: 35%;
     width: 25%;
 }
+
 .logo{
     width: 80%;
     margin-bottom: 3%;
 }
+
 .logo2{
     width: 90%;
     margin-bottom: 7%;
 }
+
 .sandp{
     width: 120%;
     margin-left: -10%;
 }
+
 .slot_container {
     float: left;
     width: 40%;
     display: inline-block;
 }
+
 .slot {
     background-image: url("img/slot.png");
     background-repeat: no-repeat;
@@ -37,6 +43,7 @@ body {
     height: 5.5vw;
     display: inline-block;
 }
+
 .top {
     background: none;
 }
@@ -44,6 +51,7 @@ body {
 .krabby_patty {
 
 }
+
 .top:hover {
     background-image: url("img/spongebob_ready.png");
     background-repeat: no-repeat;
@@ -60,10 +68,12 @@ body {
     border-radius: 15px;
     box-shadow: 0 5px #999;
 }
+
 .new_game:active {
     box-shadow: 0 3px #666;
     transform: translateY(4px);
 }
+
 .reset_score{
     width: 60%;
     margin-top: 130%;
@@ -74,15 +84,18 @@ body {
     border-radius: 15px;
     box-shadow: 0 5px #999;
 }
+
 .reset_score:active {
     box-shadow: 0 3px #666;
     transform: translateY(4px);
 }
+
 .selected_slot_p1 {
     background-image: url("img/spongebob_chip.png");
     background-repeat: no-repeat;
     background-size: 100%;
 }
+
 .selected_slot_p2 {
     background-image: url("img/patrick_chip.png");
     background-repeat: no-repeat;
@@ -94,12 +107,14 @@ body {
     background-repeat: no-repeat;
     background-size: 100%;
 }
+
 .krabby_patty_clicked_patrick{
     background-image: url("img/patty.png");
     filter: hue-rotate(290deg);
     background-repeat: no-repeat;
     background-size: 100%;
 }
+
 .player1_score {
     margin-top: 46%;
     margin-left: 58%;
@@ -108,46 +123,48 @@ body {
     position: absolute;
 
 }
+
 .player2_score {
     margin-top: 76%;
     margin-left: 58%;
     width: 28%;
     font-size: 5vw;
     position: absolute;
-
 }
+
 .youare_s, .youare_p{
     margin-top: 18%;
     margin-left: 15%;
     position: absolute;
     width: 70%;
-
 }
+
 .spongebob_gray, .spongebob{
     margin-top: 48%;
     margin-left: 17%;
     position: absolute;
     width: 28%;
-
 }
+
 .patrick_gray, .patrick {
     margin-top: 78%;
     margin-left: 17%;
     position: absolute;
     width: 28%;
-
 }
 .you_won{
     margin: 20% 0;
     width: 100%;
     position: relative;
 }
+
 .spongebob_won{
     width: 100%;
     position: relative;
     border: dotted 5px white;
     border-radius: 12px;
 }
+
 .patrick_won{
     width: 80%;
     margin: 0 11%;
@@ -155,10 +172,12 @@ body {
     border: dotted 5px white;
     border-radius: 12px;
 }
+
 .game_modes{
     width: 100%;
     margin: 20% 5%;
 }
+
 .game_modes img{
     margin: 3%;
     width: 40%;
@@ -168,15 +187,18 @@ body {
     border-radius: 15px;
     box-shadow: 0 5px #999;
 }
+
 .game_modes img:active {
     box-shadow: 0 3px #666;
     transform: translateY(4px);
 }
+
 .sound_on, .sound_off{
     position: absolute;
     margin: 0 22%;
     width: 3%;
 }
+
 .score_container {
     background-image: url("img/bamboo.png");
     background-repeat: no-repeat;
@@ -204,5 +226,3 @@ body {
     visibility: visible;
     font-size: 16px;
 }
-
-

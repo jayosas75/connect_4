@@ -1,60 +1,65 @@
+/*----Attaching game constructor to variable----*/
 var connect4 = new game_constructor();
-
 
 $(document).ready(function() {
     $('.sound_off').click(sound_off);
     $('.sound_on').click(sound_on);
+    /*---- Initializes the game----*/
     connect4.init();
 });
 
-function drop(){ //sound effect for drop noise on slots
+/*----Sound effect for drop sound on slot insert----*/
+function drop(){
     var audio = $("#drop")[0];
     audio.play();
 }
 
-function spongebob_win(){  //sound effect for spongebob win
+/*----Sound effect for either player 1 win or player 2 win----*/
+function spongebob_win(){
     var audio = $('#spongebob_laugh')[0];
     audio.play();
 }
-function patrick_win(){ //sound effect for patrick win
+function patrick_win(){
     var audio = $('#patrick_laugh')[0];
     audio.play();
 }
 
-function sound_off() { //turn off sound through sound button
+/*----Operations to switch the music on and off----*/
+function sound_off() {
     $('.sound_off').hide();
     $('.sound_on').show();
     $('.music')[0].pause();
 }
 
-function sound_on(){ //turn on sound through sound button
+function sound_on(){
     $('.sound_on').hide();
     $('.sound_off').show();
     $('.music')[0].play();
 }
+
+/*----Main Game Constructor, sets all the global variables to keep track of the games state----*/
 function game_constructor() {
-    this.winner_found = false; // flag for winner
-    this.data_received_from_server = {};
-    // this.multiplayer = false;
-    // this.player2joined = false;
-    this.remote_column_clicked = null;
-    this.player1 = true; // variable used to detect player turn
+    this.winner_found = false;
+    this.player1 = true;
     this.player1_score = 0;
     this.player2_score = 0;
-    $('.patrick').hide(); //hide patrick token @ beginning of game
-    this.diag1_counter = 0, this.diag2_counter = 0, this.horz_counter = 0, this.vert_counter = 0; //used to count up matches in a row
-    this.direction_tracker = 0; //detects which direction we are counting
+    $('.patrick').hide(); //Hides player 2's token at the beginning of game.
+    this.diag1_counter = 0, this.diag2_counter = 0, this.horz_counter = 0, this.vert_counter = 0; //Used to count up matches in a row
+    this.direction_tracker = 0; //Detects which direction we are counting
 
+    /*----This array is to update the game board with the correct tokens----*/
     this.div_array = [
         [,,,,,],
         [,,,,,],
-        [,,,,,],      // used to update game board
-        [,,,,,],      // with correct tokens
+        [,,,,,],
+        [,,,,,],
         [,,,,,],
         [,,,,,],
         [,,,,,]
     ];
-    this.game_array = [ // used to keep track of selected slots on game board. also used as an index for the div_array
+
+    /*----This array is to keep track of the selected slots on the game board.----*/
+    this.game_array = [
         ['a', 'a', 'a', 'a', 'a', 'a'], // column 0
         ['a', 'a', 'a', 'a', 'a', 'a'], // column 1
         ['a', 'a', 'a', 'a', 'a', 'a'], // column 2
@@ -65,6 +70,7 @@ function game_constructor() {
     ];
 }
 
+/*This is what happens when game is initiated. Board is reset, score is reset, applies drop sound to each "slot"*/
 game_constructor.prototype.init = function() { //initiate game
 
     this.create_divs(this); //create game board
@@ -77,7 +83,8 @@ game_constructor.prototype.init = function() { //initiate game
     });
     $(".slot").click(drop);
 };
-// create slot objects and corresponding divs
+
+/*----This creates the game board slot by slot to create a 7 by 6 table----*/
 game_constructor.prototype.create_divs = function() {
     for (var row=6; row > -1 ; row--) {
         for (var column=0; column < 7; column++) {
@@ -89,7 +96,8 @@ game_constructor.prototype.create_divs = function() {
         }
     }
 };
-// definition for slot object
+
+/*----Creates each slot in the board dynamically and applies the classes it needs----*/
 game_constructor.prototype.slot_constructor = function(parent, column, row) {
     this.parent = parent;
     this.column = column;
@@ -112,6 +120,7 @@ game_constructor.prototype.slot_constructor = function(parent, column, row) {
             $(this.slot_div).addClass('top')
         }
     };
+    /*----Puts a random krabby patty slot onto the board!----*/
     this.krabby_patty = function(){ //
         for(var i = 4; i >= 0; i--) {
             if (this.row === Math.floor((Math.random() * 5) + 1) && this.column === Math.floor((Math.random() * 5) + 1)) {
@@ -121,19 +130,7 @@ game_constructor.prototype.slot_constructor = function(parent, column, row) {
     };
 };
 
-game_constructor.prototype.update_firebase = function(column, multiplayer, player1joined, player2joined, game_over, db_player_turn) {
-    this.firebase_db = {
-        column: column,
-        multiplayer: multiplayer,
-        player1joined: player1joined,
-        player2joined: player2joined,
-        game_over: game_over,
-        db_player_turn: db_player_turn
-    };
-    //console.log('sending data to server: ', this.firebase_db);
-    connect4Model.saveState(this.firebase_db);
-};
-
+/*---Whether Player 1 or 2 makes a selection this function runs and assigns proper data to the array---*/
 game_constructor.prototype.handle_slot_click = function(clickedSlot) {
     var current_column = this.game_array[clickedSlot.column];
 
@@ -143,15 +140,16 @@ game_constructor.prototype.handle_slot_click = function(clickedSlot) {
         },function(){
             $(this).css("background", "none");
         });
-        $('.spongebob').hide(); //hide spongebob token
+        $('.spongebob').hide()
         $('.patrick').show();
-        $('.youare_s').hide(); //hide spongebob player indicator
+        $('.youare_s').hide();
         $('.youare_p').show();
         this.player1 = false;
-        var down_to_bottom = current_column.indexOf("a"); // finds the first 'a' in the column
-        current_column[down_to_bottom] = 'R'; // puts the player indicator at the 'bottom' of the array where the 'a' was found
+        /*---This makes sure that whatever column is clicked the token falls to the bottom as it normally does in connect 4---*/
+        var down_to_bottom = current_column.indexOf("a");
+        current_column[down_to_bottom] = 'R';
 
-        // applies class to div using the div_array (array containing objects)
+        /*----Adds class to open slot to indicate that player 1 has put their token here----*/
         this.div_array[clickedSlot.column][down_to_bottom].slot_div.toggleClass('selected_slot_p1');
         if($(this.div_array[clickedSlot.column][down_to_bottom].slot_div).is('.krabby_patty')){
             console.log('secret krabby patty clicked!!');
@@ -204,20 +202,18 @@ game_constructor.prototype.handle_slot_click = function(clickedSlot) {
         }
     }
 
+    /*----Checks win condition to see if player 1 or 2 has got 4 tokens in a row----*/
     this.search_surrounding_slots(clickedSlot.column, down_to_bottom);
 };
 
-game_constructor.prototype.set_timeout = function(){
-    $('.you_won').hide();
-    $('.slot').show();
-};
-
+/*----Shows "krabby patty found" screen and after 3 seconds displays alert to show another turn is rewarded----*/
 game_constructor.prototype.set_timeout_krabby = function(){
     $('.you_won').hide();
     $('.slot').show();
     window.alert('Krabby Patty Found! Take another turn!')
 };
 
+/*----Empties the board that way another game can be played and arrays are reset----*/
 game_constructor.prototype.reset_board = function(){
     $('.slot_container').empty();
     this.init();
@@ -238,6 +234,7 @@ game_constructor.prototype.reset_board = function(){
     this.winner_found = false;
 };
 
+/*----Resets the board as well as the scoreboard which keeps track of the wins of each player----*/
 game_constructor.prototype.hard_reset = function() {
     $('.slot_container').empty();
     this.init();
@@ -262,32 +259,32 @@ game_constructor.prototype.hard_reset = function() {
 
 };
 
+/*-----Displays stats to the stats container-----*/
 game_constructor.prototype.display_stats = function(){
     $('.player1_score').text(this.player1_score);
     $('.player2_score').text(this.player2_score);
 };
 
+/*----Win Condition here, It will search in each direction and stop at the end of the board to check for 4 in a row----*/
 game_constructor.prototype.search_surrounding_slots = function (array, index) {
     for (var i = -1; i < 2; i++) {
         for (var j = -1; j < 2; j++) {
             if (this.winner_found === true) {return};
-            // checks happen from the bottom of a column to the top, then moves and checks the next column in the same fashion.
-            // each direction is given a value of 1-9 and adds to the appropriate counter based on the switch statement below.
+            /*Checks happen from the bottom of a column to the top, then moves and checks the next column in the same fashion.*/
+            /*Each direction is given a value of 1-9 and adds to the appropriate counter based on the switch statement below.*/
             this.direction_tracker++;
 
-            // this if statement checks to make sure we're not out of bounds or counting the newly placed token itself
+            /*This if statement checks to make sure we're not out of bounds or counting the newly placed token itself*/
             if (!(j == 0 && i == 0) && array + i > -1 && array + i < 7 && index + j > -1 && index + j < 6) {
                 var move_array_position = i;
                 var move_index_position = j;
-                //console.log('checking at: ' + (array + i) + ', ' + (index + j));
-
-                // this while statement allows the check to continue along the same path
-                // for example, if its checking the slot to the top right and finds a match,
-                // it will continue checking in that direction and add onto the appropriate counter.
+                /*This while statement allows the check to continue along the same path
+                for example, if its checking the slot to the top right and finds a match,
+                it will continue checking in that direction and add onto the appropriate counter.*/
                 while (this.game_array[array + move_array_position][index + move_index_position] === this.game_array[array][index]) {
                     this.increase_counters(this.direction_tracker);
 
-                    // checks to see if any of the counters have reached a winning value
+                    /*Checks to see if any of the counters have reached a winning value*/
                     if (this.diag1_counter === 3 || this.diag2_counter === 3 || this.horz_counter === 3 || this.vert_counter === 3) {
                         console.log('you win!');
                         $('.slot_container').attr('disabled', 'true');
@@ -295,7 +292,7 @@ game_constructor.prototype.search_surrounding_slots = function (array, index) {
                         break;
                     }
 
-                    // increases coordinates in same direction and then checks to see if we're out of bounds before continuing another check.
+                    /*Increases coordinates in same direction and then checks to see if we're out of bounds before continuing another check.*/
                     move_array_position = move_array_position + i;
                     move_index_position = move_index_position + j;
                     if (array + move_array_position < 0 || array + move_array_position > 6 || index + move_index_position < 0 || index + move_index_position > 5) {
@@ -309,6 +306,7 @@ game_constructor.prototype.search_surrounding_slots = function (array, index) {
     this.reset_counters();
 };
 
+/*----If player 1 wins then spongebob animation will display, player 2 will display Patrick----*/
 game_constructor.prototype.who_wins = function(){
     if(this.player1 === false){
         console.log('spongebob won!');
@@ -336,8 +334,8 @@ game_constructor.prototype.who_wins = function(){
 
 };
 
+/*----This method will increase the global variables to see how many in a row each player has----*/
 game_constructor.prototype.increase_counters = function(direction_tracker) {
-    //console.log('********* method increase_counters called**************');
     switch (direction_tracker) {
         case 1:
         case 9:
@@ -358,9 +356,8 @@ game_constructor.prototype.increase_counters = function(direction_tracker) {
     }
 };
 
-
+/*----This method will reset globals on each check for win condition.----*/
 game_constructor.prototype.reset_counters = function () {
-    //console.log('********* method reset_counters called**************');
     this.diag1_counter = 0;
     this.diag2_counter = 0;
     this.horz_counter = 0;
