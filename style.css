@@ -1,228 +1,320 @@
+:root {
+  --bg-image: url("img/background.png");
+  --slot-image: url("img/slot.png");
+  --slot-width: 14.2%; /* 100% / 7 columns */
+  --slot-height: 5.5vw;
+  --font-main: sans-serif;
+  --color-overlay: rgba(255, 255, 255, 0.2);
+}
+
 body {
-    font-size: 0;
-    background-image: url("img/background.png");
+    margin: 0;
+    padding: 0;
+    font-size: 0; 
+    background-image: var(--bg-image);
     background-repeat: no-repeat;
-    background-size: 100%;
-    height: 90vh;
+    background-size: cover; /* cover is usually better for backgrounds */
+    background-position: center;
+    height: 100vh;
     width: 100vw;
+    font-family: var(--font-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent scrollbars during animations */
+}
+
+/* --- Layout Containers --- */
+.main-container {
+    display: flex;
+    width: 95vw;
+    height: 90vh;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .logo_container {
-    margin: 2%;
-    float: left;
-    height: 35%;
-    width: 25%;
-}
-
-.logo{
-    width: 80%;
-    margin-bottom: 3%;
-}
-
-.logo2{
-    width: 90%;
-    margin-bottom: 7%;
-}
-
-.sandp{
-    width: 120%;
-    margin-left: -10%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
 }
 
 .slot_container {
-    float: left;
-    width: 40%;
-    display: inline-block;
-}
-
-.slot {
-    background-image: url("img/slot.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-    width: 14%;
-    height: 5.5vw;
-    display: inline-block;
-}
-
-.top {
-    background: none;
-}
-
-.krabby_patty {
-
-}
-
-.top:hover {
-    background-image: url("img/spongebob_ready.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-
-.new_game{
-    margin-top: 110%;
-    margin-left: 20%;
-    width: 60%;
-    position: absolute;
-    display: inline-block;
-    cursor: pointer;
-    border-radius: 15px;
-    box-shadow: 0 5px #999;
-}
-
-.new_game:active {
-    box-shadow: 0 3px #666;
-    transform: translateY(4px);
-}
-
-.reset_score{
-    width: 60%;
-    margin-top: 130%;
-    margin-left: 20%;
-    position: absolute;
-    display: inline-block;
-    cursor: pointer;
-    border-radius: 15px;
-    box-shadow: 0 5px #999;
-}
-
-.reset_score:active {
-    box-shadow: 0 3px #666;
-    transform: translateY(4px);
-}
-
-.selected_slot_p1 {
-    background-image: url("img/spongebob_chip.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-
-.selected_slot_p2 {
-    background-image: url("img/patrick_chip.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-
-.krabby_patty_clicked_spongebob{
-    background-image: url("img/patty.png");
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-
-.krabby_patty_clicked_patrick{
-    background-image: url("img/patty.png");
-    filter: hue-rotate(290deg);
-    background-repeat: no-repeat;
-    background-size: 100%;
-}
-
-.player1_score {
-    margin-top: 46%;
-    margin-left: 58%;
-    width: 28%;
-    font-size: 5vw;
-    position: absolute;
-
-}
-
-.player2_score {
-    margin-top: 76%;
-    margin-left: 58%;
-    width: 28%;
-    font-size: 5vw;
-    position: absolute;
-}
-
-.youare_s, .youare_p{
-    margin-top: 18%;
-    margin-left: 15%;
-    position: absolute;
-    width: 70%;
-}
-
-.spongebob_gray, .spongebob{
-    margin-top: 48%;
-    margin-left: 17%;
-    position: absolute;
-    width: 28%;
-}
-
-.patrick_gray, .patrick {
-    margin-top: 78%;
-    margin-left: 17%;
-    position: absolute;
-    width: 28%;
-}
-.you_won{
-    margin: 20% 0;
-    width: 100%;
+    flex: 2; /* Takes up more space */
+    display: flex;
+    flex-wrap: wrap; /* Allows slots to form a grid */
+    justify-content: center;
     position: relative;
-}
-
-.spongebob_won{
-    width: 100%;
-    position: relative;
-    border: dotted 5px white;
-    border-radius: 12px;
-}
-
-.patrick_won{
-    width: 80%;
-    margin: 0 11%;
-    position: relative;
-    border: dotted 5px white;
-    border-radius: 12px;
-}
-
-.game_modes{
-    width: 100%;
-    margin: 20% 5%;
-}
-
-.game_modes img{
-    margin: 3%;
-    width: 40%;
-    display: inline-block;
-    cursor: pointer;
-    border: none;
-    border-radius: 15px;
-    box-shadow: 0 5px #999;
-}
-
-.game_modes img:active {
-    box-shadow: 0 3px #666;
-    transform: translateY(4px);
-}
-
-.sound_on, .sound_off{
-    position: absolute;
-    margin: 0 22%;
-    width: 3%;
+    /* Optional: Fixed width to ensure 7x6 aspect ratio matches background/slots */
+    max-width: 60vw; 
 }
 
 .score_container {
+    flex: 1;
     background-image: url("img/bamboo.png");
     background-repeat: no-repeat;
-    background-size: 100%;
-    margin: 12% 2% 0 2%;
-    float: left;
-    height: 70%;
-    width: 18%;
+    background-size: 100% 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     position: relative;
+    padding: 2rem 0;
 }
 
-.toolTip .toolTipText {
+/* --- Components --- */
+.logo {
+    width: 80%;
+    margin-bottom: 2rem;
+    animation: float 6s ease-in-out infinite;
+}
+
+.logo2 {
+    width: 90%;
+    margin-bottom: 2rem;
+}
+
+.sandp {
+    width: 100%;
+}
+
+/* --- Slots & Chips --- */
+.slot {
+    background-image: var(--slot-image);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 14.28%; /* 100 / 7 */
+    height: 0;
+    padding-bottom: 14.28%; /* Makes it a square based on width, or adjust to match image aspect */
+    position: relative; /* For chip positioning */
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+/* Adjustment if image isn't square. original was width: 14%; height: 5.5vw; */
+.slot {
+    width: 14.28%;
+    height: 7vw; /* Adjusted to approximate original aspect */
+    padding-bottom: 0;
+}
+
+.slot:hover {
+    filter: brightness(1.1);
+}
+
+.top {
+    /* Top row specific styling if needed */
+}
+
+.top:hover {
+    /* Hover effect handled in JS or specific classes usually, but keeping legacy hover logic support */
+}
+
+/* --- Chips (Tokens) --- */
+/* We will use ::after or nested divs for chips to animate them efficiently */
+.chip-visual {
+    position: absolute;
+    top: 5%;
+    left: 5%;
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1; /* Behind the slot overlay if slot.png has transparency */
+}
+
+/* Win Animations */
+@keyframes drop-in {
+    0% { transform: translateY(-600%); opacity: 0; }
+    70% { transform: translateY(0); }
+    80% { transform: translateY(-20%); }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0); }
+    80% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.selected_slot_p1 {
+    /* Spongebob Chip */
+    background-image: url("img/spongebob_chip.png"); 
+    background-size: contain; 
+    background-position: center;
+    animation: drop-in 0.5s ease-out;
+}
+
+/* Note: The original code applied the class to the .slot div which has the blue frame. 
+   Ideally, we want the chip BEHIND the blue frame or centered. 
+   If .slot is the frame, we might need to revisit this in JS to append a chip div INSIDE the slot 
+   instead of changing the background of the slot itself.
+   
+   FOR NOW: maintaining original logic of changing background image, 
+   but added animation which might look like the whole frame drops. 
+   Refactoring JS to append a child <div class="chip"> is better for aesthetics. 
+   I will prepare CSS for that approach. 
+*/
+
+.chip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: 85%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1; /* Behind the board frame */
+    animation: drop-in 0.6s cubic-bezier(0.25, 1.46, 0.45, 0.94);
+}
+
+.chip.p1 {
+    background-image: url("img/spongebob_chip.png");
+}
+
+.chip.p2 {
+    background-image: url("img/patrick_chip.png");
+}
+
+.chip.krabby-spongebob {
+    background-image: url("img/patty.png");
+}
+
+.chip.krabby-patrick {
+    background-image: url("img/patty.png");
+    filter: hue-rotate(290deg);
+}
+
+/* --- UI Controls --- */
+.controls_container {
+    position: absolute;
+    bottom: 5%;
+    left: 5%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.btn-game {
+    width: 100%;
+    max-width: 150px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    border-radius: 15px;
+    box-shadow: 0 5px #999;
+}
+
+.btn-game:active {
+    box-shadow: 0 3px #666;
+    transform: translateY(2px);
+}
+
+.new_game { /* Keep for legacy selector match if needed, but styling broadly */ }
+.reset_score { }
+
+
+/* --- Score Board Content --- */
+.player_score_display {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    font-size: 4rem;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 2px 2px 4px #000;
+}
+
+.player1_score { position: absolute; top: 38%; }
+.player2_score { position: absolute; top: 68%; }
+
+.character_img {
+    position: absolute;
+    width: 40%;
+    transition: filter 0.3s;
+}
+
+.youare {
+    position: absolute;
+    top: 15%;
+    width: 80%;
+    animation: pop-in 0.5s ease-out;
+}
+
+.spongebob_port { top: 40%; left: 10%; }
+.patrick_port { top: 70%; left: 10%; }
+.spongebob_gray, .patrick_gray { filter: grayscale(100%); opacity: 0.6; }
+
+/* Tooltips */
+.toolTip {
+    position: relative;
+    cursor: pointer;
+}
+.toolTipText {
     visibility: hidden;
-    width: 120px;
+    width: 100px;
+    background-color: rgba(0,0,0,0.7);
+    color: #fff;
     text-align: center;
     border-radius: 6px;
-    padding: 5px 0;
+    padding: 5px;
     position: absolute;
-    margin-left: 14%;
-    z-index: 1;
-    font-weight: 800;
+    z-index: 10;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 16px;
 }
-
 .toolTip:hover .toolTipText {
     visibility: visible;
-    font-size: 16px;
+}
+
+/* Sound Icons */
+.sound-icon {
+    width: 40px;
+    margin: 10px;
+}
+
+
+/* Modal / Win Screen */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    animation: fade-in 0.3s;
+}
+
+.win-content {
+    background: white;
+    padding: 20px;
+    border-radius: 20px;
+    text-align: center;
+    border: 5px solid #FFD700;
+    animation: pop-in 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.msg-gif {
+    max-width: 300px;
+    border-radius: 10px;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
