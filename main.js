@@ -136,8 +136,8 @@ class Connect4 {
 
         // Hover effects for "Top" logic (Showing ready piece)
         // We can just add hover listener to show ghost piece
-        slot.addEventListener('mouseenter', (e) => this.handleHover(e, true));
-        slot.addEventListener('mouseleave', (e) => this.handleHover(e, false));
+        slot.addEventListener('mouseenter', () => this.handleHover(col, true));
+        slot.addEventListener('mouseleave', () => this.handleHover(col, false));
 
         this.els.slotContainer.appendChild(slot);
 
@@ -146,14 +146,24 @@ class Connect4 {
         this.div_array[col][row] = slot;
     }
 
-    handleHover(e, isEnter) {
+    handleHover(colIndex, isEnter) {
         if (this.winner_found) return;
-        // In original, only '.top' (row 6) had hover. 
-        // Here we enhance it: hovering ANY slot in col shows effect? 
-        // OR just keep it simple.
-        // With CSS cursor: pointer, simple is good.
-        // Let's assume the user wants the "ghost" piece effect if we can.
-        // For now, relying on CSS :hover filter brightness.
+
+        const topSlot = this.div_array[colIndex][5]; // Row 5 is top
+        if (!topSlot) return;
+
+        if (isEnter) {
+            // Check if top slot is empty (technically if full we shouldn't show?)
+            // But usually connect 4 logic implies we can try to drop.
+            const img = this.player1 ? 'url("img/spongebob_ready.png")' : 'url("img/patrick_ready.png")';
+            topSlot.style.backgroundImage = img;
+            topSlot.style.backgroundRepeat = 'no-repeat';
+            topSlot.style.backgroundSize = '100%';
+        } else {
+            topSlot.style.backgroundImage = '';
+            topSlot.style.backgroundRepeat = '';
+            topSlot.style.backgroundSize = '';
+        }
     }
 
     handleSlotClick(colIndex) {
